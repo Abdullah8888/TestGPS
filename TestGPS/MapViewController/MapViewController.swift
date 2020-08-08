@@ -32,10 +32,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        //mapview setup to show user location
         self.mapView?.delegate = self
-//        mapView.showsUserLocation = true
-
         let sourcePin = MapPin(coordinate: sourceLocation!, title: "source", subtitle: "")
         let destinationPin = MapPin(coordinate: destinationLocation!, title: "destination", subtitle: "")
         self.mapView?.addAnnotation(sourcePin)
@@ -52,8 +49,8 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         let directions = MKDirections(request: directionRequest)
         directions.calculate { (response, error) in
             guard let directionResponse = response else {
-                if let er = error {
-                    print("error in getting directions == \(er.localizedDescription)")
+                if let error = error {
+                    print("error in getting directions == \(error.localizedDescription)")
                 }
                 return
             }
