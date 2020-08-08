@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MapViewController" customModule="TestGPS" customModuleProvider="target">
+            <connections>
+                <outlet property="mapView" destination="IQg-Aj-NHp" id="8Uu-2g-vFC"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="IQg-Aj-NHp">
+                    <rect key="frame" x="0.0" y="25" width="414" height="852"/>
+                </mapView>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="IQg-Aj-NHp" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" constant="-19" id="IpV-3K-ldB"/>
+                <constraint firstItem="IQg-Aj-NHp" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="eOM-EF-xkA"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="IQg-Aj-NHp" secondAttribute="bottom" constant="-15" id="eWd-2K-2n7"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="IQg-Aj-NHp" secondAttribute="trailing" id="zrr-VV-YGR"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
+            <point key="canvasLocation" x="137.68115942028987" y="122.54464285714285"/>
+        </view>
+    </objects>
+</document>
