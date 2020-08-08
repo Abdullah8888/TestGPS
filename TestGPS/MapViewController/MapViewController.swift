@@ -10,9 +10,24 @@ import UIKit
 import MapKit
 import CoreLocation
 
+class MapPin : NSObject, MKAnnotation {
+    var coordinate: CLLocationCoordinate2D
+    var title: String?
+    var subtitle: String?
+
+    init(coordinate: CLLocationCoordinate2D, title: String, subtitle: String) {
+        self.coordinate = coordinate
+        self.title = title
+        self.subtitle = subtitle
+    }
+}
+
 class MapViewController: UIViewController, MKMapViewDelegate {
     var distanceCovered: Double?
+    var sourceLocation: CLLocationCoordinate2D?
+    var destinationLocation: CLLocationCoordinate2D?
     
+    @IBOutlet weak var distCoveredLabel: UILabel?
     @IBOutlet weak var mapView: MKMapView?
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,32 +35,46 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         //mapview setup to show user location
         self.mapView?.delegate = self
 //        mapView.showsUserLocation = true
-//        mapView.mapType = MKMapType(rawValue: 0)!
-//        mapView.userTrackingMode = MKUserTrackingMode(rawValue: 2)!
-        let coords1 = CLLocationCoordinate2D(latitude: 52.167894, longitude: 17.077399)
-        let coords2 = CLLocationCoordinate2D(latitude: 52.168776, longitude: 17.081326)
-        let coords3 = CLLocationCoordinate2D(latitude: 52.167921, longitude: 17.083730)
-        let testcoords:[CLLocationCoordinate2D] = [coords1,coords2,coords3]
 
-        let testline = MKPolyline(coordinates: testcoords, count: testcoords.count)
-        //Add `MKPolyLine` as an overlay.
-        self.mapView?.addOverlay(testline)
+        let sourcePin = MapPin(coordinate: sourceLocation!, title: "source", subtitle: "")
+        let destinationPin = MapPin(coordinate: destinationLocation!, title: "destination", subtitle: "")
+        self.mapView?.addAnnotation(sourcePin)
+        self.mapView?.addAnnotation(destinationPin)
+        
+        let sourcePlaceMark = MKPlacemark(coordinate: sourceLocation!)
+        let destinationPlaceMark = MKPlacemark(coordinate: destinationLocation!)
+        
+        let directionRequest = MKDirections.Request()
+        directionRequest.source = MKMapItem(placemark: sourcePlaceMark)
+        directionRequest.destination = MKMapItem(placemark: destinationPlaceMark)
+        directionRequest.transportType = .automobile
+        
+        let directions = MKDirections(request: directionRequest)
+        directions.calculate { (response, error) in
+            guard let directionResponse = response else {
+                if let er = error {
+                    print("error in getting directions == \(er.localizedDescription)")
+                }
+                return
+            }
+            
+            let route = directionResponse.routes[0]
+            self.mapView?.addOverlay(route.polyline, level: .aboveRoads)
+            
+            let rect = route.polyline.boundingMapRect
+            self.mapView?.setRegion(MKCoordinateRegion(rect), animated: true)
+        }
 
-        self.mapView?.delegate = self
-
-        self.mapView?.centerCoordinate = coords2
-        self.mapView?.region = MKCoordinateRegion(center: coords2, span: MKCoordinateSpan(latitudeDelta: 0.02, longitudeDelta: 0.02))
+        self.distCoveredLabel?.text = String(format: "Total distance covered = %0.3f %@", distanceCovered!/1000, "km")
     }
 
-
+    //MARK;- Mapkit delegate
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
-        if let polyline = overlay as? MKPolyline {
-            let testlineRenderer = MKPolylineRenderer(polyline: polyline)
-            testlineRenderer.strokeColor = .blue
-            testlineRenderer.lineWidth = 2.0
-            return testlineRenderer
-        }
-        return MKOverlayRenderer()
+        let renderer = MKPolylineRenderer(overlay: overlay)
+        renderer.strokeColor = .red
+        renderer.lineWidth = 4.0
+        
+        return renderer
     }
 
 }

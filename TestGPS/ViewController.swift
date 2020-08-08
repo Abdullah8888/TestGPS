@@ -11,7 +11,6 @@ import CoreLocation
 
 class ViewController: UIViewController, CLLocationManagerDelegate {
 
-    // Used to start getting the users location
     let locationManager = CLLocationManager()
     
     @IBOutlet weak var latLngLabel: UILabel?
@@ -28,46 +27,20 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         // If location services is enabled get the users location
         if CLLocationManager.locationServicesEnabled() {
             locationManager.delegate = self
-            locationManager.desiredAccuracy = kCLLocationAccuracyBest // You can change the locaiton accuary here.
+            locationManager.desiredAccuracy = kCLLocationAccuracyBest
             locationManager.allowsBackgroundLocationUpdates = true
         }
         
         
     }
     
-    // Print out the location to the console
+    //MARK:- CLLocationManagerDelegate
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let location = locations.last {
             self.latLngLabel?.text = "Lat : \(location.coordinate.latitude) \nLng : \(location.coordinate.longitude)"
             PersistenceManager.sharedManager.saveCoordinateData(location.coordinate.latitude.description, location.coordinate.longitude.description)
            
         }
-    }
-    
-    // If we have been deined access give the user the option to change it
-    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        if(status == CLAuthorizationStatus.denied) {
-            showLocationDisabledPopUp()
-        }
-    }
-    
-    // Show the popup to the user if we have been deined access
-    func showLocationDisabledPopUp() {
-        let alertController = UIAlertController(title: "Background Location Access Disabled",
-                                                message: "In order to deliver pizza we need your location",
-                                                preferredStyle: .alert)
-        
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-        alertController.addAction(cancelAction)
-        
-        let openAction = UIAlertAction(title: "Open Settings", style: .default) { (action) in
-            if let url = URL(string: UIApplication.openSettingsURLString) {
-                UIApplication.shared.open(url, options: [:], completionHandler: nil)
-            }
-        }
-        alertController.addAction(openAction)
-        
-        self.present(alertController, animated: true, completion: nil)
     }
     
     @IBAction func initiateCoOrdinateCapturing(_ sender: UIButton) {
@@ -92,11 +65,14 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
             let lastElement = data[data.count-1]
             let startPoint = CLLocation(latitude: Double(firstElement["lat"]!)!, longitude: Double(firstElement["lng"]!)!)
             let stopPoint = CLLocation(latitude: Double(lastElement["lat"]!)!, longitude: Double(lastElement["lng"]!)!)
-            let distance = startPoint.distance(from: stopPoint)
-            print("the distance is \(distance)")
-            
+            let locData = data.map { (item) -> CLLocation in
+                CLLocation(latitude: Double(item["lat"]!)!, longitude: Double(item["lng"]!)!)
+            }
+            let totalDistance = locData.reduce((0.0, nil), { ($0.0 + $1.distance(from: $0.1 ?? $1), $1) }).0
             let mapViewController = MapViewController(nibName: "MapViewController", bundle: nil)
-            mapViewController.distanceCovered = 89.0
+            mapViewController.distanceCovered = totalDistance
+            mapViewController.sourceLocation = CLLocationCoordinate2D(latitude: startPoint.coordinate.latitude, longitude: startPoint.coordinate.longitude)
+            mapViewController.destinationLocation = CLLocationCoordinate2D(latitude: stopPoint.coordinate.latitude, longitude: stopPoint.coordinate.longitude)
             self.navigationController?.pushViewController(mapViewController, animated: true)
             
         }
@@ -108,8 +84,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     }
     
     func showPopUp() {
-        let alertController = UIAlertController(title: "Device Coordinate Not Found",
-                                                message: "Click on the start button to track device coordinate",
+        let alertController = UIAlertController(title: "No Coordinate Found",
+                                                message: "Click on the start button to start tracking",
                                                 preferredStyle: .alert)
         
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)

@@ -6,9 +6,15 @@
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <array key="HelveticaNeue.ttc">
+            <string>HelveticaNeue</string>
+        </array>
+    </customFonts>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MapViewController" customModule="TestGPS" customModuleProvider="target">
             <connections>
+                <outlet property="distCoveredLabel" destination="gNX-u2-sJE" id="p2k-3s-elo"/>
                 <outlet property="mapView" destination="IQg-Aj-NHp" id="8Uu-2g-vFC"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -18,15 +24,24 @@
             <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="IQg-Aj-NHp">
+                <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" rotateEnabled="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IQg-Aj-NHp">
                     <rect key="frame" x="0.0" y="25" width="414" height="852"/>
                 </mapView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gNX-u2-sJE">
+                    <rect key="frame" x="30" y="813" width="354" height="19"/>
+                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="16"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstItem="IQg-Aj-NHp" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" constant="-19" id="IpV-3K-ldB"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="gNX-u2-sJE" secondAttribute="bottom" constant="30" id="Yvi-W2-Geb"/>
                 <constraint firstItem="IQg-Aj-NHp" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="eOM-EF-xkA"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="IQg-Aj-NHp" secondAttribute="bottom" constant="-15" id="eWd-2K-2n7"/>
+                <constraint firstItem="gNX-u2-sJE" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="30" id="j0b-4I-XIl"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="gNX-u2-sJE" secondAttribute="trailing" constant="30" id="yNY-bu-9Vv"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="IQg-Aj-NHp" secondAttribute="trailing" id="zrr-VV-YGR"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
